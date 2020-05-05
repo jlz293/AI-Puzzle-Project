@@ -123,8 +123,30 @@ class Node:
         return answer
 
     def select_unassigned_variable(self):
+        i_index = 0
+        j_index = 0
+        mult_index = [[0,0]]
         for i in range(len(self.variables)):
+            for j in range(len(self.variables[i])):
+                if len(self.variables[i_index][j_index].domain) > len(self.variables[i][j].domain):
+                    mult_index = []
+                    mult_index.append([i,j])
+                    i_index = i
+                    j_index = j
+                elif len(self.variables[i_index][j_index].domain) == len(self.variables[i][j].domain):
+                    mult_index.append([i,j])
 
+        if len(mult_index) > 1:
+            max_neighbors = 0
+            for pair in mult_index:
+                neighbors = len(self.variables[pair[0]][pair[1]].less_than) + len(self.variables[pair[0]][pair[1]].greater_than)
+                if max_neighbors < neighbors:
+                    max_neighbors = neighbors
+                    max_index = pair
+            return max_index
+        else:
+            max_index = [i_index, j_index]
+            return max_index
 
     def __repr__(self):
         string = ""
